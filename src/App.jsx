@@ -22,7 +22,7 @@ function ProtectedRoute({ children, user, requiredRole }) {
 		return <Navigate to="/" replace />;
 	}
 
-	if (requiredRole === 'admin' && !user.roles.puyerAdmin && !user.roles.superAdmin) {
+	if (requiredRole === 'admin' && !user.roles.admin && !user.roles.superAdmin) {
 		// Regular users can still access user view
 		return <Navigate to="/location" replace />;
 	}
@@ -72,7 +72,7 @@ function App() {
 				setLocation(locationData.location);
 
 				// Admins get queue data too
-				if (user.roles.puyerAdmin || user.roles.superAdmin) {
+				if (user.roles.admin || user.roles.superAdmin) {
 					const data = await api.getQueue();
 					setQueue(data.queue);
 					setCurrentlyPhotographing(data.currentlyPhotographing);
@@ -126,7 +126,7 @@ function App() {
 		);
 	}
 
-	const isAdmin = user?.roles?.puyerAdmin || user?.roles?.superAdmin;
+	const isAdmin = user?.roles?.admin || user?.roles?.superAdmin;
 
 	return (
 		<BrowserRouter>
