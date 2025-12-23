@@ -60,9 +60,9 @@ export const api = {
 		body: JSON.stringify({ pricePerPhoto }),
 	}),
 
-	// Admins
-	getAdmins: () => fetchWithCredentials('/api/puyer/admins'),
-	updateAdmins: (admins) => fetchWithCredentials('/api/puyer/admins', {
+	// Admins (unified endpoint)
+	getAdmins: () => fetchWithCredentials('/api/admin/admins'),
+	updateAdmins: (admins) => fetchWithCredentials('/api/admin/admins', {
 		method: 'PUT',
 		body: JSON.stringify({ admins }),
 	}),
