@@ -1,39 +1,51 @@
+import { api } from '../utils/api';
+
 export default function UserView({ user, location, onLogout, onLogin }) {
 	return (
-		<div className="dashboard">
-			{/* Navbar */}
-			<nav className="navbar">
-				<div className="navbar-brand">
-					<span className="navbar-logo">🎞️ Puyer</span>
-					<span className="navbar-subtitle">HUMED SINLUI 1</span>
+		<div className="public-view">
+			{/* Minimal Header */}
+			<header className="public-header">
+				<div className="public-brand">
+					<span className="brand-icon">🎞️</span>
+					<div className="brand-text">
+						<span className="brand-name">Puyer</span>
+						<span className="brand-sub">HUMED SINLUI 1</span>
+					</div>
 				</div>
-				<div className="navbar-user">
+				<div className="public-auth">
 					{user ? (
-						<>
-							<img src={user.picture} alt={user.name} className="user-avatar" />
-							<div className="user-info">
-								<div className="user-name">{user.name}</div>
-								<div className="user-role">User</div>
-							</div>
-							<button onClick={onLogout} className="btn btn-ghost btn-sm">
-								Keluar
-							</button>
-						</>
+						<div className="user-pill">
+							<img src={user.picture} alt={user.name} className="user-pill-avatar" />
+							<span className="user-pill-name">{user.name}</span>
+							<button onClick={onLogout} className="user-pill-logout">×</button>
+						</div>
 					) : (
-						<button onClick={onLogin} className="btn btn-primary btn-sm">
-							Login Admin
+						<button onClick={onLogin} className="login-link">
+							Admin →
 						</button>
 					)}
 				</div>
-			</nav>
+			</header>
 
-			<div className="dashboard-content">
-				<div className="location-banner">
-					<div className="location-icon">📍</div>
-					<div className="location-label">Lokasi Fotografer Puyer Saat Ini</div>
-					<div className="location-value">{location || 'Belum diatur'}</div>
+			{/* Main Content - Centered Location Display */}
+			<main className="public-main">
+				<div className="location-display">
+					<div className="location-pin">
+						<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+							<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+							<circle cx="12" cy="10" r="3"></circle>
+						</svg>
+					</div>
+					<p className="location-label-text">Lokasi Fotografer</p>
+					<h1 className="location-name">{location || 'Belum diatur'}</h1>
+					<p className="location-hint">Refresh halaman untuk update lokasi terbaru</p>
 				</div>
-			</div>
+			</main>
+
+			{/* Footer */}
+			<footer className="public-footer">
+				<p>© 2026 HUMED SINLUI 1</p>
+			</footer>
 		</div>
 	);
 }

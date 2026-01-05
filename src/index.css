@@ -855,29 +855,217 @@ h4 {
 	gap: var(--space-sm);
 }
 
-/* Location Banner - Puyer specific */
+/* Location Banner - Puyer specific (for Dashboard) */
 .location-banner {
-	background: linear-gradient(135deg, var(--primary-500), var(--primary-700));
-	border-radius: var(--radius-2xl);
-	padding: var(--space-2xl);
+	background: var(--bg-card);
+	border: 1px solid var(--border-color);
+	border-radius: var(--radius-xl);
+	padding: var(--space-lg);
 	text-align: center;
 	margin-bottom: var(--space-lg);
+	transition: all var(--transition-base);
+}
+
+.location-banner:hover {
+	border-color: var(--border-glow);
+	box-shadow: var(--shadow-glow);
 }
 
 .location-label {
-	font-size: var(--font-size-sm);
-	opacity: 0.9;
-	margin-bottom: var(--space-sm);
+	font-size: var(--font-size-xs);
+	color: var(--text-muted);
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+	margin-bottom: var(--space-xs);
 }
 
 .location-value {
-	font-size: var(--font-size-3xl);
-	font-weight: 800;
+	font-size: var(--font-size-2xl);
+	font-weight: 700;
+	color: var(--primary-400);
 }
 
 .location-icon {
-	font-size: 3rem;
+	font-size: 1.5rem;
+	margin-bottom: var(--space-sm);
+	opacity: 0.7;
+}
+
+/* ========================================
+   Public View - UserView Component
+   ======================================== */
+
+.public-view {
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
+}
+
+.public-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: var(--space-md) var(--space-xl);
+	border-bottom: 1px solid var(--border-color);
+}
+
+.public-brand {
+	display: flex;
+	align-items: center;
+	gap: var(--space-sm);
+}
+
+.brand-icon {
+	font-size: 1.5rem;
+}
+
+.brand-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.brand-name {
+	font-size: var(--font-size-lg);
+	font-weight: 700;
+	color: var(--text-primary);
+}
+
+.brand-sub {
+	font-size: var(--font-size-xs);
+	color: var(--text-muted);
+}
+
+.public-auth {
+	display: flex;
+	align-items: center;
+}
+
+.login-link {
+	background: transparent;
+	border: none;
+	color: var(--text-muted);
+	font-size: var(--font-size-sm);
+	cursor: pointer;
+	padding: var(--space-xs) var(--space-sm);
+	border-radius: var(--radius-md);
+	transition: all var(--transition-base);
+}
+
+.login-link:hover {
+	color: var(--text-primary);
+	background: var(--bg-tertiary);
+}
+
+.user-pill {
+	display: flex;
+	align-items: center;
+	gap: var(--space-sm);
+	padding: var(--space-xs) var(--space-sm);
+	background: var(--bg-tertiary);
+	border-radius: var(--radius-full);
+}
+
+.user-pill-avatar {
+	width: 24px;
+	height: 24px;
+	border-radius: var(--radius-full);
+}
+
+.user-pill-name {
+	font-size: var(--font-size-sm);
+	color: var(--text-secondary);
+}
+
+.user-pill-logout {
+	background: transparent;
+	border: none;
+	color: var(--text-muted);
+	font-size: var(--font-size-lg);
+	cursor: pointer;
+	padding: 0;
+	line-height: 1;
+	width: 20px;
+	height: 20px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: var(--radius-full);
+	transition: all var(--transition-base);
+}
+
+.user-pill-logout:hover {
+	background: rgba(255, 255, 255, 0.1);
+	color: var(--text-primary);
+}
+
+.public-main {
+	flex: 1;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: var(--space-xl);
+}
+
+.location-display {
+	text-align: center;
+	max-width: 400px;
+}
+
+.location-pin {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 80px;
+	height: 80px;
+	background: var(--bg-tertiary);
+	border-radius: var(--radius-full);
+	margin-bottom: var(--space-lg);
+	color: var(--primary-500);
+	animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+
+	0%,
+	100% {
+		transform: translateY(0);
+	}
+
+	50% {
+		transform: translateY(-8px);
+	}
+}
+
+.location-label-text {
+	font-size: var(--font-size-sm);
+	color: var(--text-muted);
+	text-transform: uppercase;
+	letter-spacing: 0.1em;
+	margin-bottom: var(--space-sm);
+}
+
+.location-name {
+	font-size: clamp(2rem, 8vw, 4rem);
+	font-weight: 800;
+	background: linear-gradient(135deg, var(--text-primary), var(--primary-400));
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	background-clip: text;
 	margin-bottom: var(--space-md);
+	line-height: 1.1;
+}
+
+.location-hint {
+	font-size: var(--font-size-xs);
+	color: var(--text-muted);
+}
+
+.public-footer {
+	padding: var(--space-md);
+	text-align: center;
+	font-size: var(--font-size-xs);
+	color: var(--text-muted);
+	border-top: 1px solid var(--border-color);
 }
 
 /* Loading Spinner */
