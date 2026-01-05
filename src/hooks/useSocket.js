@@ -3,7 +3,7 @@ import { io } from 'socket.io-client';
 
 const SOCKET_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
-export function useSocket(onQueueUpdate, onConfigUpdate, onLocationUpdate) {
+export function useSocket(onQueueUpdate, onConfigUpdate, onLocationUpdate, onStatusUpdate) {
 	const socketRef = useRef(null);
 
 	const connect = useCallback(() => {
@@ -31,6 +31,10 @@ export function useSocket(onQueueUpdate, onConfigUpdate, onLocationUpdate) {
 			onLocationUpdate?.(data);
 		});
 
+		socketRef.current.on('puyer:status:update', (data) => {
+			onStatusUpdate?.(data);
+		});
+
 		socketRef.current.on('disconnect', () => {
 			console.log('Socket disconnected');
 		});
@@ -38,7 +42,7 @@ export function useSocket(onQueueUpdate, onConfigUpdate, onLocationUpdate) {
 		socketRef.current.on('error', (error) => {
 			console.error('Socket error:', error);
 		});
-	}, [onQueueUpdate, onConfigUpdate, onLocationUpdate]);
+	}, [onQueueUpdate, onConfigUpdate, onLocationUpdate, onStatusUpdate]);
 
 	const disconnect = useCallback(() => {
 		if (socketRef.current) {

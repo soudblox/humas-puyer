@@ -13,6 +13,9 @@ export default function Dashboard({
 	pricePerPhoto,
 	location,
 	setLocation,
+	presetLocations,
+	status,
+	setStatus,
 	onLogout,
 	refreshQueue
 }) {
@@ -102,6 +105,18 @@ export default function Dashboard({
 		}
 	};
 
+	const handleStatusUpdate = async (newStatus) => {
+		setLoading(true);
+		try {
+			await api.updateStatus(newStatus);
+			setStatus(newStatus);
+		} catch (error) {
+			alert('Gagal: ' + error.message);
+		} finally {
+			setLoading(false);
+		}
+	};
+
 	const formatPrice = (price) => {
 		return new Intl.NumberFormat('id-ID', {
 			style: 'currency',
@@ -138,11 +153,19 @@ export default function Dashboard({
 			</nav>
 
 			<div className="dashboard-content">
-				{/* Location Banner */}
+				{/* Location & Status Banner */}
 				<div className="location-banner" onClick={() => setShowLocationModal(true)} style={{ cursor: 'pointer' }}>
-					<div className="location-icon">📍</div>
-					<div className="location-label">Lokasi Fotografer (klik untuk ubah)</div>
-					<div className="location-value">{location || 'Belum diatur'}</div>
+					<div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 'var(--space-md)' }}>
+						<div>
+							<div className="location-icon">📍</div>
+							<div className="location-label">Lokasi Fotografer (klik untuk ubah)</div>
+							<div className="location-value">{location || 'Belum diatur'}</div>
+						</div>
+						<div className={`status-badge status-${status}`} style={{ marginBottom: 0 }}>
+							<span className="status-dot"></span>
+							<span className="status-text">{status === 'open' ? 'Buka' : status === 'break' ? 'Istirahat' : 'Tutup'}</span>
+						</div>
+					</div>
 				</div>
 
 				{/* Stats */}
@@ -277,8 +300,11 @@ export default function Dashboard({
 			{showLocationModal && (
 				<LocationModal
 					currentLocation={location}
+					presetLocations={presetLocations}
+					currentStatus={status}
 					onClose={() => setShowLocationModal(false)}
-					onSave={handleLocationUpdate}
+					onSaveLocation={handleLocationUpdate}
+					onSaveStatus={handleStatusUpdate}
 					loading={loading}
 				/>
 			)}

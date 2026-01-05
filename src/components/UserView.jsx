@@ -1,6 +1,27 @@
-import { api } from '../utils/api';
+export default function UserView({ user, location, status, onLogout, onLogin }) {
+	const statusConfig = {
+		open: {
+			label: 'Buka',
+			icon: '🟢',
+			className: 'status-open',
+			message: 'Fotografer sedang beroperasi'
+		},
+		break: {
+			label: 'Istirahat',
+			icon: '🟡',
+			className: 'status-break',
+			message: 'Fotografer sedang istirahat sebentar'
+		},
+		closed: {
+			label: 'Tutup',
+			icon: '🔴',
+			className: 'status-closed',
+			message: 'Fotografer tidak beroperasi'
+		}
+	};
 
-export default function UserView({ user, location, onLogout, onLogin }) {
+	const currentStatus = statusConfig[status] || statusConfig.open;
+
 	return (
 		<div className="public-view">
 			{/* Minimal Header */}
@@ -27,18 +48,52 @@ export default function UserView({ user, location, onLogout, onLogin }) {
 				</div>
 			</header>
 
-			{/* Main Content - Centered Location Display */}
+			{/* Main Content */}
 			<main className="public-main">
 				<div className="location-display">
-					<div className="location-pin">
-						<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-							<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-							<circle cx="12" cy="10" r="3"></circle>
-						</svg>
+					{/* Status Indicator */}
+					<div className={`status-badge ${currentStatus.className}`}>
+						<span className="status-dot"></span>
+						<span className="status-text">{currentStatus.label}</span>
 					</div>
-					<p className="location-label-text">Lokasi Fotografer</p>
-					<h1 className="location-name">{location || 'Belum diatur'}</h1>
-					<p className="location-hint">Refresh halaman untuk update lokasi terbaru</p>
+
+					{status === 'closed' ? (
+						<>
+							<div className="location-pin closed">
+								<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+									<circle cx="12" cy="12" r="10"></circle>
+									<line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line>
+								</svg>
+							</div>
+							<p className="location-label-text">Puyer Tutup</p>
+							<h1 className="location-name dimmed">Tidak Beroperasi</h1>
+							<p className="location-hint">{currentStatus.message}</p>
+						</>
+					) : status === 'break' ? (
+						<>
+							<div className="location-pin break">
+								<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+									<circle cx="12" cy="12" r="10"></circle>
+									<polyline points="12 6 12 12 16 14"></polyline>
+								</svg>
+							</div>
+							<p className="location-label-text">Sedang Istirahat</p>
+							<h1 className="location-name">{location || 'Lokasi belum diatur'}</h1>
+							<p className="location-hint">{currentStatus.message}</p>
+						</>
+					) : (
+						<>
+							<div className="location-pin">
+								<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+									<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+									<circle cx="12" cy="10" r="3"></circle>
+								</svg>
+							</div>
+							<p className="location-label-text">Lokasi Fotografer</p>
+							<h1 className="location-name">{location || 'Belum diatur'}</h1>
+							<p className="location-hint">Temui fotografer di lokasi ini</p>
+						</>
+					)}
 				</div>
 			</main>
 

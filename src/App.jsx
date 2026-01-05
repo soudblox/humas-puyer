@@ -39,6 +39,8 @@ function App() {
 	const [currentlyPhotographing, setCurrentlyPhotographing] = useState(null);
 	const [pricePerPhoto, setPricePerPhoto] = useState(0);
 	const [location, setLocation] = useState('');
+	const [presetLocations, setPresetLocations] = useState([]);
+	const [status, setStatus] = useState('open');
 
 	const handleQueueUpdate = useCallback((data) => {
 		setQueue(data.queue);
@@ -57,14 +59,25 @@ function App() {
 		}
 	}, []);
 
-	const { connect, disconnect } = useSocket(handleQueueUpdate, handleConfigUpdate, handleLocationUpdate);
+	const handleStatusUpdate = useCallback((data) => {
+		if (data.status) {
+			setStatus(data.status);
+		}
+	}, []);
+
+	const { connect, disconnect } = useSocket(handleQueueUpdate, handleConfigUpdate, handleLocationUpdate, handleStatusUpdate);
 
 	useEffect(() => {
 		async function init() {
 			try {
-				// Always fetch location first (public endpoint)
-				const locationData = await api.getLocation();
+				// Always fetch location and status first (public endpoints)
+				const [locationData, statusData] = await Promise.all([
+					api.getLocation(),
+					api.getStatus()
+				]);
 				setLocation(locationData.location);
+				setPresetLocations(locationData.presetLocations || []);
+				setStatus(statusData.status || 'open');
 
 				// Try to get user session
 				try {
@@ -144,7 +157,7 @@ function App() {
 					element={
 						isAdmin
 							? <Navigate to="/dashboard" replace />
-							: <UserView user={user} location={location} onLogout={handleLogout} onLogin={handleLogin} />
+							: <UserView user={user} location={location} status={status} onLogout={handleLogout} onLogin={handleLogin} />
 					}
 				/>
 				<Route path="/auth/callback" element={<AuthCallback />} />
@@ -159,6 +172,9 @@ function App() {
 								pricePerPhoto={pricePerPhoto}
 								location={location}
 								setLocation={setLocation}
+								presetLocations={presetLocations}
+								status={status}
+								setStatus={setStatus}
 								onLogout={handleLogout}
 								refreshQueue={refreshQueue}
 							/>

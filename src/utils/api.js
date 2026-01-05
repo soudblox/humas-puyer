@@ -31,6 +31,13 @@ export const api = {
 		body: JSON.stringify({ location }),
 	}),
 
+	// Status (public for users)
+	getStatus: () => fetchWithCredentials('/api/puyer/status'),
+	updateStatus: (status) => fetchWithCredentials('/api/puyer/status', {
+		method: 'PUT',
+		body: JSON.stringify({ status }),
+	}),
+
 	// Queue (admin only)
 	getQueue: () => fetchWithCredentials('/api/puyer/queue'),
 	createQueue: (data) => fetchWithCredentials('/api/puyer/queue', {
