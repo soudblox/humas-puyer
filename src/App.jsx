@@ -2,7 +2,6 @@ import { useState, useEffect, useCallback } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import { api } from './utils/api';
 import { useSocket } from './hooks/useSocket';
-import LoginPage from './components/LoginPage';
 import UserView from './components/UserView';
 import Dashboard from './components/Dashboard';
 import SuperAdminPanel from './components/SuperAdminPanel';
@@ -23,8 +22,7 @@ function ProtectedRoute({ children, user, requiredRole }) {
 	}
 
 	if (requiredRole === 'admin' && !user.roles.admin && !user.roles.superAdmin) {
-		// Regular users can still access user view
-		return <Navigate to="/location" replace />;
+		return <Navigate to="/" replace />;
 	}
 
 	if (requiredRole === 'superAdmin' && !user.roles.superAdmin) {
@@ -62,35 +60,45 @@ function App() {
 	const { connect, disconnect } = useSocket(handleQueueUpdate, handleConfigUpdate, handleLocationUpdate);
 
 	useEffect(() => {
-		async function checkAuth() {
+		async function init() {
 			try {
-				const { user } = await api.getMe();
-				setUser(user);
-
-				// All users can see location
+				// Always fetch location first (public endpoint)
 				const locationData = await api.getLocation();
 				setLocation(locationData.location);
 
-				// Admins get queue data too
-				if (user.roles.admin || user.roles.superAdmin) {
-					const data = await api.getQueue();
-					setQueue(data.queue);
-					setCurrentlyPhotographing(data.currentlyPhotographing);
-					setPricePerPhoto(data.pricePerPhoto);
+				// Try to get user session
+				try {
+					const { user } = await api.getMe();
+					setUser(user);
+
+					// Admins get queue data too
+					if (user.roles.admin || user.roles.superAdmin) {
+						const data = await api.getQueue();
+						setQueue(data.queue);
+						setCurrentlyPhotographing(data.currentlyPhotographing);
+						setPricePerPhoto(data.pricePerPhoto);
+					}
+				} catch (error) {
+					// Not logged in - that's fine, location still works
+					console.log('Not authenticated - showing public view');
 				}
 
 				connect();
 			} catch (error) {
-				console.log('Not authenticated');
+				console.error('Failed to initialize:', error);
 			} finally {
 				setLoading(false);
 			}
 		}
 
-		checkAuth();
+		init();
 
 		return () => disconnect();
 	}, [connect, disconnect]);
+
+	const handleLogin = () => {
+		window.location.href = api.getLoginUrl();
+	};
 
 	const handleLogout = async () => {
 		try {
@@ -134,20 +142,12 @@ function App() {
 				<Route
 					path="/"
 					element={
-						user
-							? (isAdmin ? <Navigate to="/dashboard" replace /> : <Navigate to="/location" replace />)
-							: <LoginPage />
+						isAdmin
+							? <Navigate to="/dashboard" replace />
+							: <UserView user={user} location={location} onLogout={handleLogout} onLogin={handleLogin} />
 					}
 				/>
 				<Route path="/auth/callback" element={<AuthCallback />} />
-				<Route
-					path="/location"
-					element={
-						user
-							? <UserView user={user} location={location} onLogout={handleLogout} />
-							: <Navigate to="/" replace />
-					}
-				/>
 				<Route
 					path="/dashboard"
 					element={
