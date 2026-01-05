@@ -1006,61 +1006,150 @@ h4 {
 	padding: var(--space-xl);
 }
 
-.location-display {
+/* Location Card - Main Feature */
+.location-card {
 	text-align: center;
-	max-width: 400px;
+	max-width: 480px;
+	width: 100%;
+	padding: var(--space-2xl) var(--space-xl);
+	background: var(--bg-card);
+	border: 1px solid var(--border-color);
+	border-radius: var(--radius-2xl);
+	backdrop-filter: blur(10px);
 }
 
-.location-pin {
+/* Status Pill - Top of card */
+.status-pill {
 	display: inline-flex;
 	align-items: center;
-	justify-content: center;
-	width: 80px;
-	height: 80px;
-	background: var(--bg-tertiary);
+	gap: var(--space-sm);
+	padding: var(--space-sm) var(--space-lg);
 	border-radius: var(--radius-full);
-	margin-bottom: var(--space-lg);
-	color: var(--primary-500);
-	animation: float 3s ease-in-out infinite;
+	font-size: var(--font-size-sm);
+	font-weight: 600;
+	margin-bottom: var(--space-xl);
 }
 
-@keyframes float {
+.status-pill .status-dot {
+	width: 10px;
+	height: 10px;
+	border-radius: 50%;
+}
+
+.status-pill.status-open {
+	background: rgba(34, 197, 94, 0.15);
+	color: #22c55e;
+	border: 1px solid rgba(34, 197, 94, 0.3);
+}
+
+.status-pill.status-open .status-dot {
+	background: #22c55e;
+	box-shadow: 0 0 12px rgba(34, 197, 94, 0.6);
+	animation: pulse-glow 2s ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
 
 	0%,
 	100% {
-		transform: translateY(0);
+		opacity: 1;
+		box-shadow: 0 0 12px rgba(34, 197, 94, 0.6);
 	}
 
 	50% {
-		transform: translateY(-8px);
+		opacity: 0.7;
+		box-shadow: 0 0 20px rgba(34, 197, 94, 0.8);
 	}
 }
 
-.location-label-text {
-	font-size: var(--font-size-sm);
+.status-pill.status-break {
+	background: rgba(234, 179, 8, 0.15);
+	color: #eab308;
+	border: 1px solid rgba(234, 179, 8, 0.3);
+}
+
+.status-pill.status-break .status-dot {
+	background: #eab308;
+	box-shadow: 0 0 12px rgba(234, 179, 8, 0.6);
+}
+
+.status-pill.status-closed {
+	background: rgba(239, 68, 68, 0.15);
+	color: #ef4444;
+	border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.status-pill.status-closed .status-dot {
+	background: #ef4444;
+	box-shadow: 0 0 12px rgba(239, 68, 68, 0.6);
+}
+
+/* Location Content */
+.location-content {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.location-label {
+	font-size: var(--font-size-xs);
 	color: var(--text-muted);
 	text-transform: uppercase;
-	letter-spacing: 0.1em;
+	letter-spacing: 0.15em;
 	margin-bottom: var(--space-sm);
 }
 
-.location-name {
-	font-size: clamp(2rem, 8vw, 4rem);
+.location-title {
+	font-size: clamp(2.5rem, 10vw, 4rem);
 	font-weight: 800;
-	background: linear-gradient(135deg, var(--text-primary), var(--primary-400));
+	background: linear-gradient(135deg, var(--text-primary) 30%, var(--primary-400));
 	-webkit-background-clip: text;
 	-webkit-text-fill-color: transparent;
 	background-clip: text;
 	margin-bottom: var(--space-md);
-	line-height: 1.1;
+	line-height: 1;
+	text-transform: capitalize;
 }
 
-.location-hint {
-	font-size: var(--font-size-xs);
+.location-subtitle {
+	font-size: var(--font-size-sm);
 	color: var(--text-muted);
 }
 
-/* Status Badge */
+/* Closed State */
+.location-content.closed .closed-icon {
+	color: var(--text-muted);
+	margin-bottom: var(--space-lg);
+	opacity: 0.5;
+}
+
+.location-content.closed .location-title {
+	background: linear-gradient(135deg, var(--text-muted), var(--gray-500));
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	background-clip: text;
+	font-size: clamp(2rem, 8vw, 3rem);
+}
+
+/* Break Notice */
+.break-notice {
+	display: inline-flex;
+	align-items: center;
+	gap: var(--space-sm);
+	margin-top: var(--space-lg);
+	padding: var(--space-sm) var(--space-md);
+	background: rgba(234, 179, 8, 0.1);
+	border-radius: var(--radius-md);
+	font-size: var(--font-size-sm);
+	color: #eab308;
+}
+
+/* View States */
+.public-view.view-closed .location-card {
+	border-color: rgba(239, 68, 68, 0.2);
+}
+
+/* Legacy support for Dashboard status badge */
 .status-badge {
 	display: inline-flex;
 	align-items: center;
@@ -1072,75 +1161,42 @@ h4 {
 	margin-bottom: var(--space-xl);
 }
 
-.status-dot {
+.status-badge .status-dot {
 	width: 8px;
 	height: 8px;
 	border-radius: 50%;
-	animation: pulse-dot 2s ease-in-out infinite;
+	animation: pulse-glow 2s ease-in-out infinite;
 }
 
-@keyframes pulse-dot {
-
-	0%,
-	100% {
-		opacity: 1;
-		transform: scale(1);
-	}
-
-	50% {
-		opacity: 0.6;
-		transform: scale(1.2);
-	}
-}
-
-.status-open {
+.status-badge.status-open {
 	background: rgba(34, 197, 94, 0.15);
 	color: #22c55e;
 }
 
-.status-open .status-dot {
+.status-badge.status-open .status-dot {
 	background: #22c55e;
 	box-shadow: 0 0 8px rgba(34, 197, 94, 0.5);
 }
 
-.status-break {
+.status-badge.status-break {
 	background: rgba(234, 179, 8, 0.15);
 	color: #eab308;
 }
 
-.status-break .status-dot {
+.status-badge.status-break .status-dot {
 	background: #eab308;
 	box-shadow: 0 0 8px rgba(234, 179, 8, 0.5);
 }
 
-.status-closed {
+.status-badge.status-closed {
 	background: rgba(239, 68, 68, 0.15);
 	color: #ef4444;
 }
 
-.status-closed .status-dot {
+.status-badge.status-closed .status-dot {
 	background: #ef4444;
 	box-shadow: 0 0 8px rgba(239, 68, 68, 0.5);
 	animation: none;
-}
-
-/* Location Pin Variations */
-.location-pin.break {
-	color: #eab308;
-	animation: none;
-}
-
-.location-pin.closed {
-	color: #ef4444;
-	animation: none;
-	opacity: 0.7;
-}
-
-.location-name.dimmed {
-	background: linear-gradient(135deg, var(--text-muted), var(--gray-500));
-	-webkit-background-clip: text;
-	-webkit-text-fill-color: transparent;
-	background-clip: text;
 }
 
 /* Preset Location Chips */
